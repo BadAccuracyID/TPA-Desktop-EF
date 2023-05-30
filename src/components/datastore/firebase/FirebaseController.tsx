@@ -1,4 +1,4 @@
-import {auth, firestore} from "@/components/datastore/FirebaseConfig";
+import {auth, firestore} from "@/components/datastore/firebase/FirebaseConfig";
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from "@firebase/auth";
 import {collection, getDocs} from "@firebase/firestore";
 

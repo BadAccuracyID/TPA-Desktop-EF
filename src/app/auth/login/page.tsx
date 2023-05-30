@@ -3,7 +3,7 @@
 import {LockClosedIcon} from "@heroicons/react/20/solid";
 import Link from "next/link";
 import React, {useState} from "react";
-import {signIn} from "@/components/datastore/FirebaseController";
+import {signIn} from "@/components/datastore/firebase/FirebaseController";
 
 export default function Page() {
     const [email, setEmail] = useState('');
