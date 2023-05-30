@@ -1,12 +1,18 @@
 import {AccountRole} from "./AccountRole";
 
 export class Account {
+    private readonly uid: string;
     private name: string;
     private role: AccountRole;
 
-    constructor(name: string, role: AccountRole) {
+    constructor(uid: string, name: string, role: AccountRole) {
+        this.uid = uid;
         this.name = name;
         this.role = role;
+    }
+
+    public getUid(): string {
+        return this.uid;
     }
 
     public getName(): string {
