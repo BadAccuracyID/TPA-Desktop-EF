@@ -51,7 +51,7 @@ export default function Page() {
                         </button>
                         <Link
                             href="/auth/login"
-                            className="text-sm py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            className="text-sm py-2 rounded focus:outline-none focus:shadow-outline">
                             <text>
                                 Already have an account?&nbsp;
                             </text>

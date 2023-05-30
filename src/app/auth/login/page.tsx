@@ -3,18 +3,28 @@
 import {LockClosedIcon} from "@heroicons/react/20/solid";
 import Link from "next/link";
 import React, {useState} from "react";
+import {signInWithEmailAndPassword} from "@/components/datastore/FirebaseController";
 
 export default function Page() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+
+    const [error, setError] = useState('');
 
     const handleRememberMeChange = () => {
         setRememberMe((rememberMe) => !rememberMe);
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        // login
+        try {
+            await signInWithEmailAndPassword(email, password);
+            // User successfully logged in, perform any necessary actions or redirect
+        } catch (error) {
+            setError('Invalid email or password');
+        }
     };
 
     return (
@@ -24,7 +34,7 @@ export default function Page() {
                     <LockClosedIcon className="h-6 w-auto"/>
                     <h2 className="text-2xl font-bold text-gray-800">Login</h2>
                 </div>
-                <form>
+                <form onSubmit={handleLogin}>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                             Email
@@ -70,7 +80,7 @@ export default function Page() {
 
                     <div className="flex justify-between">
                         <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline"
                             type="submit">
                             Sign In
                         </button>
