@@ -1,7 +1,22 @@
+'use client';
+
 import {LockClosedIcon} from "@heroicons/react/20/solid";
 import Link from "next/link";
+import React, {useState} from "react";
 
 export default function Page() {
+    const [rememberMe, setRememberMe] = useState(false);
+
+    const handleRememberMeChange = () => {
+        setRememberMe((rememberMe) => !rememberMe);
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        // login
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-lg">
@@ -31,12 +46,28 @@ export default function Page() {
                             type="password"
                             placeholder="Enter your password"
                         />
-                        <Link
-                            className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 mb-1"
-                            href="/forgot-password">
-                            Forgot Password?
-                        </Link>
+
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between mb-4">
+                                <label className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        className="form-checkbox h-4 w-4 text-blue-500"
+                                        checked={rememberMe}
+                                        onChange={handleRememberMeChange}
+                                    />
+                                    <span className="ml-2 text-gray-700 text-sm">Remember Me</span>
+                                </label>
+                            </div>
+
+                            <Link
+                                className="inline-block align-baseline font-bold text-sm text-blue-700 hover:text-blue-800 mb-2"
+                                href="/forgot-password">
+                                Forgot Password?
+                            </Link>
+                        </div>
                     </div>
+
                     <div className="flex justify-between">
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
