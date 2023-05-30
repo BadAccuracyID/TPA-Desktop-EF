@@ -1,7 +1,29 @@
+'use client';
+
 import {LockClosedIcon} from "@heroicons/react/20/solid";
 import Link from "next/link";
+import React, {useState} from "react";
+import {register} from "@/components/datastore/FirebaseController";
 
 export default function Page() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const [error, setError] = useState('');
+
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        try {
+            let user = await register(email, password);
+            console.log('success: ' + user.uid);
+            // User successfully logged in, perform any necessary actions or redirect
+        } catch (error) {
+            setError('Failed!');
+            console.log(error)
+        }
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-lg">
@@ -9,7 +31,7 @@ export default function Page() {
                     <LockClosedIcon className="h-6 w-auto"/>
                     <h2 className="text-2xl font-bold text-gray-800">Register</h2>
                 </div>
-                <form>
+                <form onSubmit={handleRegister}>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                             Email
@@ -18,6 +40,8 @@ export default function Page() {
                             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="email"
                             type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             placeholder="Enter your email"
                         />
                     </div>
@@ -29,6 +53,8 @@ export default function Page() {
                             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="password"
                             type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             placeholder="Enter your password"
                         />
                     </div>

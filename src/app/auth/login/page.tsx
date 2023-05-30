@@ -3,7 +3,7 @@
 import {LockClosedIcon} from "@heroicons/react/20/solid";
 import Link from "next/link";
 import React, {useState} from "react";
-import {signInWithEmailAndPassword} from "@/components/datastore/FirebaseController";
+import {signIn} from "@/components/datastore/FirebaseController";
 
 export default function Page() {
     const [email, setEmail] = useState('');
@@ -20,10 +20,12 @@ export default function Page() {
         e.preventDefault();
 
         try {
-            await signInWithEmailAndPassword(email, password);
+            await signIn(email, password);
+            console.log('success');
             // User successfully logged in, perform any necessary actions or redirect
         } catch (error) {
             setError('Invalid email or password');
+            console.log(error)
         }
     };
 
@@ -43,6 +45,8 @@ export default function Page() {
                             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="email"
                             type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             placeholder="Enter your email"
                         />
                     </div>
@@ -54,6 +58,8 @@ export default function Page() {
                             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-2 leading-tight focus:outline-none focus:shadow-outline"
                             id="password"
                             type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             placeholder="Enter your password"
                         />
 
