@@ -3,7 +3,7 @@
 import {LockClosedIcon} from "@heroicons/react/20/solid";
 import Link from "next/link";
 import React, {useState} from "react";
-import {signIn} from "@/components/datastore/firebase/FirebaseController";
+import {getUserData, signIn} from "@/components/datastore/firebase/FirebaseController";
 
 export default function Page() {
     const [email, setEmail] = useState('');
@@ -19,10 +19,25 @@ export default function Page() {
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        // validations
+        if (email.length === 0) {
+            setError('Email is required');
+            return;
+        }
+        if (password.length === 0) {
+            setError('Password is required');
+            return;
+        }
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters');
+            return;
+        }
+
+        // actual login
         try {
-            await signIn(email, password);
-            console.log('success');
-            // User successfully logged in, perform any necessary actions or redirect
+            signIn(email, password).then((user) => {
+                console.log(getUserData(user.uid))
+            })
         } catch (error) {
             setError('Invalid email or password');
             console.log(error)

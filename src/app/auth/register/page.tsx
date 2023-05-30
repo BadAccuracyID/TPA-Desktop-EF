@@ -3,7 +3,7 @@
 import {LockClosedIcon} from "@heroicons/react/20/solid";
 import Link from "next/link";
 import React, {useState} from "react";
-import {register} from "@/components/datastore/firebase/FirebaseController";
+import {initUserData, register} from "@/components/datastore/firebase/FirebaseController";
 
 export default function Page() {
     const [email, setEmail] = useState('');
@@ -14,10 +14,25 @@ export default function Page() {
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        // validations
+        if (email.length === 0) {
+            setError('Email is required');
+            return;
+        }
+        if (password.length === 0) {
+            setError('Password is required');
+            return;
+        }
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters');
+            return;
+        }
+
+        // actual register
         try {
-            let user = await register(email, password);
-            console.log('success: ' + user.uid);
-            // User successfully logged in, perform any necessary actions or redirect
+            register(email, password).then(user => {
+                return initUserData(user.uid, email, password);
+            });
         } catch (error) {
             setError('Failed!');
             console.log(error)
