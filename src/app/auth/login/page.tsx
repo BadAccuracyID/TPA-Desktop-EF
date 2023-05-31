@@ -99,15 +99,21 @@ export default function Page() {
                         </div>
                     </div>
 
+                    <div className="flex items-center justify-center mb-6">
+                        <label className="text-red-600 m-1 h-3">
+                            {error}
+                        </label>
+                    </div>
+
                     <div className="flex justify-between">
                         <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline"
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                             type="submit">
                             Sign In
                         </button>
                         <Link
                             href="/auth/register"
-                            className="text-sm py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            className="text-sm py-2 rounded focus:outline-none focus:shadow-outline">
                             <text>
                                 Don&apos;t have an account?&nbsp;
                             </text>
