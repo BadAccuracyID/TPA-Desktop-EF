@@ -12,6 +12,7 @@ import {
     UsersIcon
 } from "@heroicons/react/20/solid";
 import Link from "next/link";
+import {getCurrentAccount} from "@/components/datastore/local/UserManager";
 import {firebaseUser} from "@/components/datastore/firebase/FirebaseManager";
 
 interface MenuItem {
@@ -68,16 +69,17 @@ const menuItems: MenuItem[] = [
 ]
 
 export default function LeftNavBar() {
-    const [username, setUsername] = React.useState('')
+    const [username, setUsername] = React.useState('Fetching...')
 
     // fetch on load
-    firebaseUser().then(user => {
-        if (user && user.email) {
-            setUsername(user.email)
+    getCurrentAccount().then((account) => {
+        if (account) {
+            setUsername(account.getName())
+        } else {
+            setUsername('Unknown')
+            console.log(firebaseUser())
         }
-    }).catch(error => {
-        console.error(error);
-    })
+    });
 
     return (
         <div className="fixed left-0 top-0 h-screen bg-blue-800 py-4 px-2 flex flex-col justify-start items-center">
