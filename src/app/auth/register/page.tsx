@@ -3,9 +3,11 @@
 import {LockClosedIcon, XMarkIcon} from "@heroicons/react/20/solid";
 import Link from "next/link";
 import React, {useState} from "react";
-import {initUserData, register} from "@/components/datastore/firebase/FirebaseManager";
+import {initUserData, register, signIn} from "@/components/datastore/firebase/FirebaseManager";
+import {useRouter} from "next/navigation";
 
 export default function Page() {
+    const router = useRouter();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -42,7 +44,10 @@ export default function Page() {
         try {
             register(email, password)
                 .then(credential => {
-                    return initUserData(credential.user.uid, name, email);
+                    initUserData(credential.user.uid, name, email);
+                    signIn(email, password, false).then(() => {
+                        router.push('/dashboard');
+                    })
                 })
                 .catch(error => {
                     switch (error.code) {
