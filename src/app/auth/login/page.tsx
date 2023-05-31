@@ -3,7 +3,7 @@
 import {LockClosedIcon} from "@heroicons/react/20/solid";
 import Link from "next/link";
 import React, {useState} from "react";
-import {getUserData, signIn} from "@/components/datastore/firebase/FirebaseController";
+import {signIn} from "@/components/datastore/firebase/FirebaseController";
 
 export default function Page() {
     const [email, setEmail] = useState('');
@@ -35,11 +35,27 @@ export default function Page() {
 
         // actual login
         try {
-            signIn(email, password).then((user) => {
-                console.log(getUserData(user.uid))
-            })
+            signIn(email, password)
+                .then(credentials => {
+                    console.log(credentials.user);
+                })
+                .catch(error => {
+                    switch (error.code) {
+                        case 'auth/invalid-email':
+                        case 'auth/wrong-password':
+                        case 'auth/user-not-found':
+                            setError('Invalid email or password');
+                            break;
+                        case 'auth/user-disabled':
+                            setError('User disabled, contact support');
+                            break;
+                        default:
+                            setError('Login failed');
+                            break;
+                    }
+                });
         } catch (error) {
-            setError('Invalid email or password');
+            setError('Login failed');
             console.log(error)
         }
     };

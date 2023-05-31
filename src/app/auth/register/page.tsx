@@ -40,9 +40,26 @@ export default function Page() {
 
         // actual register
         try {
-            register(email, confirmPassword).then(user => {
-                return initUserData(user.uid, name, email);
-            });
+            register(email, password)
+                .then(credential => {
+                    return initUserData(credential.user.uid, name, email);
+                })
+                .catch(error => {
+                    switch (error.code) {
+                        case 'auth/email-already-in-use':
+                            setError('Email already in use');
+                            break;
+                        case 'auth/invalid-email':
+                            setError('Invalid email');
+                            break;
+                        case 'auth/weak-password':
+                            setError('Weak password');
+                            break;
+                        default:
+                            setError('Registration failed');
+                            break;
+                    }
+                })
         } catch (error) {
             setError('Registration failed!');
             console.log(error);
