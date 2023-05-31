@@ -74,7 +74,11 @@ export default function LeftNavBar() {
     // fetch on load
     getCurrentAccount().then((account) => {
         if (account) {
-            setUsername(account.getName())
+            let name = account.getName();
+            if (name.length > 15) {
+                name = name.substring(0, 15) + '...'
+            }
+            setUsername(name)
         } else {
             setUsername('Unknown')
             console.log(firebaseUser())
@@ -82,7 +86,8 @@ export default function LeftNavBar() {
     });
 
     return (
-        <div className="fixed left-0 top-0 h-screen bg-blue-800 py-4 px-2 flex flex-col justify-start items-center">
+        <div
+            className="fixed left-0 top-0 h-screen bg-blue-800 py-4 px-2 flex flex-col justify-start items-center max-w-2xl">
             <ul className="w-full max-h-full overflow-y-auto flex-grow">
                 {menuItems.map((menuItem, index) => (
                     <li key={index}>
