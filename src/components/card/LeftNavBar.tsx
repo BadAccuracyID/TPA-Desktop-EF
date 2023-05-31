@@ -13,7 +13,7 @@ import {
 } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import {getCurrentAccount} from "@/components/datastore/local/UserManager";
-import {firebaseUser} from "@/components/datastore/firebase/FirebaseManager";
+import {useRouter} from "next/navigation";
 
 interface MenuItem {
     name: string;
@@ -69,19 +69,15 @@ const menuItems: MenuItem[] = [
 ]
 
 export default function LeftNavBar() {
+    const router = useRouter()
     const [username, setUsername] = React.useState('Fetching...')
 
     // fetch on load
     getCurrentAccount().then((account) => {
         if (account) {
-            let name = account.getName();
-            if (name.length > 15) {
-                name = name.substring(0, 15) + '...'
-            }
-            setUsername(name)
+            setUsername(account.getName())
         } else {
-            setUsername('Unknown')
-            console.log(firebaseUser())
+            router.push('/auth/login')
         }
     });
 
