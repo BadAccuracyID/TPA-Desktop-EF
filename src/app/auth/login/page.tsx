@@ -109,7 +109,7 @@ export default function Page() {
 
                             <Link
                                 className="inline-block align-baseline font-bold text-sm text-blue-700 hover:text-blue-800 mb-2"
-                                href="/forgot-password">
+                                href="/auth/forgot">
                                 Forgot Password?
                             </Link>
                         </div>

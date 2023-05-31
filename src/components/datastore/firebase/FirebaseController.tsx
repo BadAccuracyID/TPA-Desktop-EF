@@ -1,5 +1,5 @@
 import {auth, firestore} from "@/components/datastore/firebase/FirebaseConfig";
-import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from "@firebase/auth";
+import {createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword} from "@firebase/auth";
 import {collection, doc, getDocs, setDoc} from "@firebase/firestore";
 
 // Authentication Methods
@@ -13,6 +13,10 @@ export const register = async (email: string, password: string) => {
 
 export const signOut = async () => {
     return await auth.signOut();
+};
+
+export const forgotPassword = async (email: string) => {
+    return await sendPasswordResetEmail(auth, email);
 };
 
 // Firestore Methods
