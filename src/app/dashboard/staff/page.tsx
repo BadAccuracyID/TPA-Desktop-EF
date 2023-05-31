@@ -5,7 +5,6 @@ export default function Page() {
         <div className="bg-gray-100 text-white">
             <LeftNavBar/>
 
-
         </div>
-    );
+    )
 }
