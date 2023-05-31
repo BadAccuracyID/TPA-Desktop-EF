@@ -1,11 +1,8 @@
-import NavBarCard from "@/components/card/NavBarCard";
 import Link from "next/link";
 
 export default function Home() {
     return (
         <div className="bg-gray-100 text-white">
-            <NavBarCard/>
-
             {/* Main Section */}
             <section className="flex flex-col items-center justify-center h-screen px-6 sm:px-0">
                 <h1 className="text-4xl sm:text-6xl font-bold mb-8 text-center text-black">
