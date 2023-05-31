@@ -52,7 +52,7 @@ const menuItems: MenuItem[] = [
         name: 'Staff',
         icon: <UsersIcon className={menuIconAttr}/>,
         requiredRoles: [AccountRole.Administrator],
-        redirectLink: '/staff'
+        redirectLink: '/dashboard/staff'
     },
     {
         name: 'Transportation',
@@ -87,7 +87,7 @@ export default function LeftNavBar() {
 
     return (
         <div
-            className="fixed left-0 top-0 h-screen bg-blue-800 py-4 px-2 flex flex-col justify-start items-center max-w-2xl">
+            className="fixed left-0 top-0 h-screen bg-blue-800 py-4 px-2 flex flex-col justify-start items-center">
             <ul className="w-full max-h-full overflow-y-auto flex-grow">
                 {menuItems.map((menuItem, index) => (
                     <li key={index}>
@@ -102,10 +102,12 @@ export default function LeftNavBar() {
                 ))}
             </ul>
 
-            <div className="flex flex-col items-center justify-end bg-blue-800 py-4 px-2 max-w-2xl">
-                <div className="flex flex-col items-center text-white mb-4 max-w-sm">
+            <div className="flex flex-col items-center justify-end bg-blue-800 py-4 px-2">
+                <div className="flex flex-col items-center text-white mb-4">
                     <UserIcon className="h-8 text-white"/>
-                    {username}
+                    <span className="w-24 overflow-hidden text-center">
+                        {username}
+                    </span>
                 </div>
                 <Link
                     href="/auth/logout"
