@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import {AccountRole} from "@/components/objects/AccountRole";
 import {
@@ -10,6 +12,7 @@ import {
     UsersIcon
 } from "@heroicons/react/20/solid";
 import Link from "next/link";
+import {firebaseUser} from "@/components/datastore/firebase/FirebaseManager";
 
 interface MenuItem {
     name: string;
@@ -65,7 +68,16 @@ const menuItems: MenuItem[] = [
 ]
 
 export default function LeftNavBar() {
-    const username = 'John Doe'; // Replace with actual username
+    const [username, setUsername] = React.useState('')
+
+    // fetch on load
+    firebaseUser().then(user => {
+        if (user && user.email) {
+            setUsername(user.email)
+        }
+    }).catch(error => {
+        console.error(error);
+    })
 
     return (
         <div className="fixed left-0 top-0 h-screen bg-blue-800 py-4 px-2 flex flex-col justify-start items-center">
@@ -82,13 +94,14 @@ export default function LeftNavBar() {
                     </li>
                 ))}
             </ul>
-            <div className="flex flex-col items-center justify-end bg-blue-800 py-4 px-2">
-                <div className="flex flex-col items-center text-white mb-4">
+
+            <div className="flex flex-col items-center justify-end bg-blue-800 py-4 px-2 max-w-2xl">
+                <div className="flex flex-col items-center text-white mb-4 max-w-sm">
                     <UserIcon className="h-8 text-white"/>
                     {username}
                 </div>
                 <Link
-                    href="/login"
+                    href="/auth/logout"
                     className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Logout
                 </Link>
