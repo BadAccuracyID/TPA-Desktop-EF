@@ -73,8 +73,6 @@ export const getUserData = async (userId: string) => {
         if (!docRef.empty) {
             let data = docRef.docs.find(doc => doc.id === userId);
             if (data) {
-                console.log('1: ' + data);
-                console.log('2: ' + data.data());
                 return data.data();
             } else {
                 throw new Error('Data not found');

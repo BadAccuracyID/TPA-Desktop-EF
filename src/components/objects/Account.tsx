@@ -17,20 +17,16 @@ export class Account {
         return this.uid;
     }
 
-    public isVerified(): boolean {
-        return this.verified;
-    }
-
     public setVerified(verified: boolean): void {
         this.verified = verified;
     }
 
-    public getName(): string {
-        return this.name;
+    public isVerified(): boolean {
+        return this.verified;
     }
 
-    public getRole(): AccountRole {
-        return this.role;
+    public getName(): string {
+        return this.name;
     }
 
     public setName(name: string): void {
@@ -39,5 +35,9 @@ export class Account {
 
     public setRole(role: AccountRole): void {
         this.role = role;
+    }
+
+    public getRole(): AccountRole {
+        return this.role;
     }
 }
