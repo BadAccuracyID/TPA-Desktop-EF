@@ -6,8 +6,10 @@ import React, {useState} from "react";
 import {initUserData, register} from "@/components/datastore/firebase/FirebaseController";
 
 export default function Page() {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const [error, setError] = useState('');
 
@@ -15,6 +17,10 @@ export default function Page() {
         e.preventDefault();
 
         // validations
+        if (name.length === 0) {
+            setError('Username is required');
+            return;
+        }
         if (email.length === 0) {
             setError('Email is required');
             return;
@@ -27,11 +33,15 @@ export default function Page() {
             setError('Password must be at least 6 characters');
             return;
         }
+        if (confirmPassword !== password) {
+            setError('Passwords do not match');
+            return;
+        }
 
         // actual register
         try {
-            register(email, password).then(user => {
-                return initUserData(user.uid, email, password);
+            register(email, confirmPassword).then(user => {
+                return initUserData(user.uid, name, email);
             });
         } catch (error) {
             setError('Failed!');
@@ -47,6 +57,18 @@ export default function Page() {
                     <h2 className="text-2xl font-bold text-gray-800">Register</h2>
                 </div>
                 <form onSubmit={handleRegister}>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                            Username
+                        </label>
+                        <input
+                            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="username"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Enter your username"
+                        />
+                    </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                             Email
@@ -73,7 +95,7 @@ export default function Page() {
                             placeholder="Enter your password"
                         />
                     </div>
-                    <div className="mb-6">
+                    <div className="mb-2">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                             Confirm Password
                         </label>
@@ -81,9 +103,18 @@ export default function Page() {
                             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                             id="password"
                             type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                             placeholder="Enter your password"
                         />
                     </div>
+
+                    <div className="flex items-center justify-center mb-6">
+                        <label className="text-red-600 m-1 h-3">
+                            {error}
+                        </label>
+                    </div>
+
                     <div className="flex justify-between">
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
