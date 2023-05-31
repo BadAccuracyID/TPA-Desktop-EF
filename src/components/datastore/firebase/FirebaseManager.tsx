@@ -1,15 +1,28 @@
 import {auth, firestore} from "@/components/datastore/firebase/FirebaseConfig";
 import {
+    browserSessionPersistence,
     createUserWithEmailAndPassword,
+    inMemoryPersistence,
     sendPasswordResetEmail,
+    setPersistence,
     signInWithEmailAndPassword,
     signOut
 } from "@firebase/auth";
 import {collection, doc, getDocs, setDoc} from "@firebase/firestore";
 
 // Authentication Methods
-export const signIn = async (email: string, password: string) => {
-    return await signInWithEmailAndPassword(auth, email, password);
+export const signIn = async (email: string, password: string, remember: boolean) => {
+    if (remember) {
+        return await setPersistence(auth, browserSessionPersistence)
+            .then(() => {
+                return signInWithEmailAndPassword(auth, email, password);
+            })
+    } else {
+        return await setPersistence(auth, inMemoryPersistence)
+            .then(() => {
+                return signInWithEmailAndPassword(auth, email, password);
+            })
+    }
 };
 
 export const register = async (email: string, password: string) => {
