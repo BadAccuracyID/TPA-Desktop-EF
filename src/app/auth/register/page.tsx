@@ -55,6 +55,7 @@ export default function Page() {
                     })
                 })
                 .catch(error => {
+                    setRedOutput(true);
                     switch (error.code) {
                         case 'auth/email-already-in-use':
                             setMessage('Email already in use');
@@ -160,18 +161,18 @@ export default function Page() {
 
                     <div className="flex justify-between">
                         <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline duration-150"
                             disabled={!redOutput}
                             type="submit">
                             Register
                         </button>
                         <Link
                             href="/auth/login"
-                            className="text-sm py-2 rounded focus:outline-none focus:shadow-outline">
+                            className="text-sm py-2 rounded focus:outline-none focus:shadow-outline hover:text-blue-800">
                             <text>
                                 Already have an account?&nbsp;
                             </text>
-                            <text className="text-blue-700 font-bold">
+                            <text className="text-blue-700 font-bold duration-150">
                                 Login here.
                             </text>
                         </Link>

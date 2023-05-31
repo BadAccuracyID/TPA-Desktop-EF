@@ -48,6 +48,7 @@ export default function Page() {
                     router.push('/dashboard');
                 })
                 .catch(error => {
+                    setRedOutput(true);
                     switch (error.code) {
                         case 'auth/invalid-email':
                         case 'auth/wrong-password':
@@ -128,7 +129,7 @@ export default function Page() {
                             </div>
 
                             <Link
-                                className="inline-block align-baseline font-bold text-sm text-blue-700 hover:text-blue-800 mb-2"
+                                className="inline-block align-baseline font-bold text-sm text-blue-700 hover:text-blue-800 mb-2 duration-150"
                                 href="/auth/forgot">
                                 Forgot Password?
                             </Link>
@@ -146,18 +147,18 @@ export default function Page() {
 
                     <div className="flex justify-between">
                         <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline duration-150"
                             disabled={!redOutput}
                             type="submit">
                             Sign In
                         </button>
                         <Link
                             href="/auth/register"
-                            className="text-sm py-2 rounded focus:outline-none focus:shadow-outline">
+                            className="text-sm py-2 rounded focus:outline-none focus:shadow-outline hover:text-blue-800">
                             <span>
                                 Don&apos;t have an account?&nbsp;
                             </span>
-                            <span className="text-blue-700 font-bold">
+                            <span className="text-blue-700 font-bold duration-150">
                                 Register here.
                             </span>
                         </Link>
