@@ -3,10 +3,12 @@ import {
     browserSessionPersistence,
     createUserWithEmailAndPassword,
     inMemoryPersistence,
+    onAuthStateChanged,
     sendPasswordResetEmail,
     setPersistence,
     signInWithEmailAndPassword,
-    signOut
+    signOut,
+    User
 } from "@firebase/auth";
 import {collection, doc, getDocs, setDoc} from "@firebase/firestore";
 
@@ -30,6 +32,7 @@ export const register = async (email: string, password: string) => {
 }
 
 export const signOutUser = async () => {
+    cachedUser = null;
     return await signOut(auth)
 };
 
@@ -38,9 +41,21 @@ export const forgotPassword = async (email: string) => {
 };
 
 // Current User Methods
-export const firebaseUser = async () => {
-    return auth.currentUser;
-}
+let cachedUser: User | null = null;
+export const firebaseUser = (): Promise<User | null> => {
+    return new Promise((resolve, reject) => {
+        if (cachedUser) {
+            console.log('cachedUser');
+            resolve(cachedUser);
+        } else {
+            const unsubscribe = onAuthStateChanged(auth, (user) => {
+                unsubscribe();
+                cachedUser = user;
+                resolve(user);
+            }, reject);
+        }
+    });
+};
 
 // Firestore Methods
 export const initUserData = async (userId: string, name: string, email: string) => {
