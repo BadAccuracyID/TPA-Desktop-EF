@@ -8,7 +8,7 @@ export const signIn = async (email: string, password: string) => {
         const response = await signInWithEmailAndPassword(auth, email, password);
         return response.user;
     } catch (error) {
-        console.error('Error signing in:', error);
+        console.error('Error signing in: ', error);
         throw error;
     }
 };
@@ -18,7 +18,7 @@ export const register = async (email: string, password: string) => {
         const response = await createUserWithEmailAndPassword(auth, email, password);
         return response.user;
     } catch (error) {
-        console.error('Error registering:', error);
+        console.error('Error registering: ', error);
         throw error;
     }
 }
@@ -27,7 +27,7 @@ export const signOut = async () => {
     try {
         await auth.signOut();
     } catch (error) {
-        console.error('Error signing out:', error);
+        console.error('Error signing out: ', error);
         throw error;
     }
 };
@@ -51,7 +51,6 @@ export const initUserData = async (userId: string, name: string, email: string) 
             createdAt: new Date(),
         });
     } catch (error) {
-        console.error('Error initializing user data:', error);
         throw error;
     }
 }

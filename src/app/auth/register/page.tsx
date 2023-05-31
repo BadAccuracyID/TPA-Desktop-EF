@@ -44,8 +44,8 @@ export default function Page() {
                 return initUserData(user.uid, name, email);
             });
         } catch (error) {
-            setError('Failed!');
-            console.log(error)
+            setError('Registration failed!');
+            console.log(error);
         }
     };
 
