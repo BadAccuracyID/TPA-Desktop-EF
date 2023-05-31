@@ -15,12 +15,12 @@ const ActualPage = ({data}: { data: Account[] }) => {
                     return <StaffCard key={account.getUid()}
                                       id={account.getUid()}
                                       name={account.getName()}
-                                      email={"unknown"}
+                                      email={account.getEmail()}
                                       role={account.getRole()}
                                       verified={account.isVerified()}
-                                      createdAt={new Date()}
-                                      verifiedBy={"unknown"}
-                                      verifiedAt={new Date()}
+                                      createdAt={account.getCreatedAt()}
+                                      verifiedBy={account.getVerifiedBy()}
+                                      verifiedAt={account.getVerifiedAt()}
                     />
                 })
             }
