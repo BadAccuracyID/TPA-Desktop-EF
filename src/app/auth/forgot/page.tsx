@@ -2,7 +2,7 @@
 
 import {LockClosedIcon} from "@heroicons/react/20/solid";
 import React, {useState} from "react";
-import {forgotPassword} from "@/components/datastore/firebase/FirebaseController";
+import {forgotPassword} from "@/components/datastore/firebase/FirebaseManager";
 import Link from "next/link";
 
 export default function Page() {
