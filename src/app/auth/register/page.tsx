@@ -13,35 +13,40 @@ export default function Page() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const [error, setError] = useState('');
+    const [redOutput, setRedOutput] = useState(true);
+    const [message, setMessage] = useState('');
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setRedOutput(true);
 
         // validations
         if (name.length === 0) {
-            setError('Username is required');
+            setMessage('Username is required');
             return;
         }
         if (email.length === 0) {
-            setError('Email is required');
+            setMessage('Email is required');
             return;
         }
         if (password.length === 0) {
-            setError('Password is required');
+            setMessage('Password is required');
             return;
         }
         if (password.length < 6) {
-            setError('Password must be at least 6 characters');
+            setMessage('Password must be at least 6 characters');
             return;
         }
         if (confirmPassword !== password) {
-            setError('Passwords do not match');
+            setMessage('Passwords do not match');
             return;
         }
 
         // actual register
         try {
+            setRedOutput(false);
+            setMessage('Registering user...');
+
             register(email, password)
                 .then(credential => {
                     initUserData(credential.user.uid, name, email);
@@ -52,21 +57,22 @@ export default function Page() {
                 .catch(error => {
                     switch (error.code) {
                         case 'auth/email-already-in-use':
-                            setError('Email already in use');
+                            setMessage('Email already in use');
                             break;
                         case 'auth/invalid-email':
-                            setError('Invalid email');
+                            setMessage('Invalid email');
                             break;
                         case 'auth/weak-password':
-                            setError('Weak password');
+                            setMessage('Weak password');
                             break;
                         default:
-                            setError('Registration failed');
+                            setMessage('Registration failed');
                             break;
                     }
                 })
         } catch (error) {
-            setError('Registration failed!');
+            setRedOutput(true);
+            setMessage('Registration failed!');
             console.log(error);
         }
     };
@@ -144,14 +150,18 @@ export default function Page() {
                     </div>
 
                     <div className="flex items-center justify-center mb-6">
-                        <label className="text-red-600 m-1 h-3">
-                            {error}
-                        </label>
+                        {redOutput && (
+                            <label className="text-red-600 m-1 h-3">{message}</label>
+                        )}
+                        {!redOutput && (
+                            <label className="text-green-500 m-1 h-3">{message}</label>
+                        )}
                     </div>
 
                     <div className="flex justify-between">
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            disabled={!redOutput}
                             type="submit">
                             Register
                         </button>

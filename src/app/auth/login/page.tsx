@@ -12,7 +12,8 @@ export default function Page() {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
 
-    const [error, setError] = useState('');
+    const [redOutput, setRedOutput] = useState(true);
+    const [message, setMessage] = useState('');
 
     const handleRememberMeChange = () => {
         setRememberMe((rememberMe) => !rememberMe);
@@ -20,23 +21,27 @@ export default function Page() {
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setRedOutput(true);
 
         // validations
         if (email.length === 0) {
-            setError('Email is required');
+            setMessage('Email is required');
             return;
         }
         if (password.length === 0) {
-            setError('Password is required');
+            setMessage('Password is required');
             return;
         }
         if (password.length < 6) {
-            setError('Password must be at least 6 characters');
+            setMessage('Password must be at least 6 characters');
             return;
         }
 
         // actual login
         try {
+            setRedOutput(false);
+            setMessage('Signing in...');
+
             signIn(email, password, rememberMe)
                 .then(() => {
                     // redirect
@@ -47,18 +52,19 @@ export default function Page() {
                         case 'auth/invalid-email':
                         case 'auth/wrong-password':
                         case 'auth/user-not-found':
-                            setError('Invalid email or password');
+                            setMessage('Invalid email or password');
                             break;
                         case 'auth/user-disabled':
-                            setError('User disabled, contact support');
+                            setMessage('User disabled, contact support');
                             break;
                         default:
-                            setError('Login failed');
+                            setMessage('Login failed');
                             break;
                     }
                 });
         } catch (error) {
-            setError('Login failed');
+            setRedOutput(true);
+            setMessage('Login failed');
             console.log(error)
         }
     };
@@ -130,14 +136,18 @@ export default function Page() {
                     </div>
 
                     <div className="flex items-center justify-center mb-6">
-                        <label className="text-red-600 m-1 h-3">
-                            {error}
-                        </label>
+                        {redOutput && (
+                            <label className="text-red-600 m-1 h-3">{message}</label>
+                        )}
+                        {!redOutput && (
+                            <label className="text-green-500 m-1 h-3">{message}</label>
+                        )}
                     </div>
 
                     <div className="flex justify-between">
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            disabled={!redOutput}
                             type="submit">
                             Sign In
                         </button>
