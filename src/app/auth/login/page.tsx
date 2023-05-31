@@ -144,12 +144,12 @@ export default function Page() {
                         <Link
                             href="/auth/register"
                             className="text-sm py-2 rounded focus:outline-none focus:shadow-outline">
-                            <p>
+                            <span>
                                 Don&apos;t have an account?&nbsp;
-                            </p>
-                            <p className="text-blue-700 font-bold">
+                            </span>
+                            <span className="text-blue-700 font-bold">
                                 Register here.
-                            </p>
+                            </span>
                         </Link>
                     </div>
                 </form>
