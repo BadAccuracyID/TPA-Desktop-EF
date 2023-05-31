@@ -2,7 +2,6 @@ import type {NextRequest} from 'next/server';
 import {NextResponse} from 'next/server';
 
 export function middleware(request: NextRequest) {
-    let allCookies = request.cookies.getAll();
 
     // todo: check auth
     if (!request.nextUrl.pathname.startsWith('/auth')) {
