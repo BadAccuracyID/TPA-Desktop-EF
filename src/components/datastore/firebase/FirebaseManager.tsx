@@ -46,6 +46,7 @@ export const firebaseUser = async () => {
 export const initUserData = async (userId: string, name: string, email: string) => {
     try {
         await setDoc(doc(firestore, 'users', userId), {
+            uid: userId,
             name: name,
             email: email,
             role: 'Staff',
@@ -53,12 +54,6 @@ export const initUserData = async (userId: string, name: string, email: string) 
             createdAt: new Date(),
             verifiedBy: null,
             verifiedAt: null,
-        });
-
-        await setDoc(doc(firestore, 'awaitingVerification', userId), {
-            name: name,
-            email: email,
-            createdAt: new Date(),
         });
     } catch (error) {
         throw error;
@@ -86,3 +81,18 @@ export const getUserData = async (userId: string) => {
     }
 }
 
+export const getAllUsers = async () => {
+    try {
+        const collectionRef = collection(firestore, 'users');
+        const docRef = await getDocs(collectionRef);
+
+        if (!docRef.empty) {
+            return docRef.docs.map(doc => doc.data());
+        } else {
+            throw new Error('No users found');
+        }
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw error;
+    }
+}
