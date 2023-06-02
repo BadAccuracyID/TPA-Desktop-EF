@@ -5,25 +5,34 @@ import {useEffect, useState} from "react";
 import {getAllAccounts} from "@/components/datastore/local/UserManager";
 import {Account} from "@/components/objects/Account";
 import Loading from "@/components/card/Loading";
-import StaffCard from "@/components/card/staff/StaffCard";
+import {StaffCard, StaffSettingsModel} from "@/components/card/staff/StaffCard";
 
 const ActualPage = ({data}: { data: Account[] }) => {
+    const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+
+    const handleCloseModal = () => {
+        setSelectedAccount(null);
+    };
+
     return (
         <div className="gap-6 grid grid-cols-1 justify-items-center min-h-screen h-max p-8">
-            {
-                data.map((account) => {
-                    return <StaffCard key={account.getUid()}
-                                      id={account.getUid()}
-                                      name={account.getName()}
-                                      email={account.getEmail()}
-                                      role={account.getRole()}
-                                      verified={account.isVerified()}
-                                      createdAt={account.getCreatedAt()}
-                                      verifiedBy={account.getVerifiedBy()}
-                                      verifiedAt={account.getVerifiedAt()}
-                    />
-                })
-            }
+            {selectedAccount && (
+                <StaffSettingsModel account={selectedAccount} onClose={handleCloseModal}/>
+            )}
+
+            {data.map((account) => {
+                return <StaffCard key={account.getUid()}
+                                  id={account.getUid()}
+                                  name={account.getName()}
+                                  email={account.getEmail()}
+                                  role={account.getRole()}
+                                  verified={account.isVerified()}
+                                  createdAt={account.getCreatedAt()}
+                                  verifiedBy={account.getVerifiedBy()}
+                                  verifiedAt={account.getVerifiedAt()}
+                                  onClick={() => setSelectedAccount(account)}
+                />
+            })}
         </div>
     )
 }
