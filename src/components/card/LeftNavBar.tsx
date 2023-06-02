@@ -82,16 +82,17 @@ export default function LeftNavBar() {
     });
 
     return (
-        <div
-            className="fixed left-0 top-0 h-screen bg-blue-800 py-4 px-2 flex flex-col justify-start items-center">
+        <nav
+            className="navbar fixed left-0 top-0 h-full bg-blue-800 py-4 px-2 flex flex-col justify-start items-center z-50">
             <ul className="w-full max-h-full overflow-y-auto flex-grow">
                 {menuItems.map((menuItem, index) => (
                     <li key={index}>
                         <Link
                             className="flex flex-col items-center text-white py-2.5 px-1 hover:bg-blue-500 cursor-pointer rounded-xl"
-                            href={menuItem.redirectLink}
-                        >
+                            href={menuItem.redirectLink}>
+
                             {menuItem.icon}
+
                             <span className="text-sm py-1">{menuItem.name}</span>
                         </Link>
                     </li>
@@ -111,6 +112,6 @@ export default function LeftNavBar() {
                     Logout
                 </Link>
             </div>
-        </div>
+        </nav>
     )
 }

@@ -9,30 +9,85 @@ import {StaffCard, StaffSettingsModel} from "@/components/card/staff/StaffCard";
 
 const ActualPage = ({data}: { data: Account[] }) => {
     const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+    const [unverifiedAccounts, setUnverifiedAccounts] = useState<Account[]>([]);
+    const [verifiedAccounts, setVerifiedAccounts] = useState<Account[]>([]);
 
     const handleCloseModal = () => {
         setSelectedAccount(null);
     };
 
+    // load unverified accounts
+    useEffect(() => {
+        const unverified = data.filter((account) => {
+            return !account.isVerified();
+        });
+        setUnverifiedAccounts(unverified);
+    }, [data]);
+
+    // load verified accounts
+    useEffect(() => {
+        const verified = data.filter((account) => {
+            return account.isVerified();
+        });
+        setVerifiedAccounts(verified);
+    }, [data]);
+
     return (
-        <div className="gap-6 grid grid-cols-1 justify-items-center min-h-screen h-max p-8">
+        <div className="gap-6 grid grid-cols-1 justify-items-center min-h-screen h-max w-max p-8">
             {selectedAccount && (
                 <StaffSettingsModel account={selectedAccount} onClose={handleCloseModal}/>
             )}
 
-            {data.map((account) => {
-                return <StaffCard key={account.getUid()}
-                                  id={account.getUid()}
-                                  name={account.getName()}
-                                  email={account.getEmail()}
-                                  role={account.getRole()}
-                                  verified={account.isVerified()}
-                                  createdAt={account.getCreatedAt()}
-                                  verifiedBy={account.getVerifiedBy()}
-                                  verifiedAt={account.getVerifiedAt()}
-                                  onClick={() => setSelectedAccount(account)}
-                />
-            })}
+            <div className="flex flex-col gap-6 items-start">
+                <div className="mb-6 items-start">
+                    <h1 className="text-3xl font-bold text-black mb-6 items-start">Unverified Accounts</h1>
+                    <div className="flex flex-col gap-6 items-start">
+                        {unverifiedAccounts.map((account) => {
+                            return (
+                                <StaffCard
+                                    key={account.getUid()}
+                                    id={account.getUid()}
+                                    name={account.getName()}
+                                    email={account.getEmail()}
+                                    role={account.getRole()}
+                                    verified={account.isVerified()}
+                                    onClick={() => {
+                                        setSelectedAccount(account);
+                                    }}
+                                />
+                            );
+                        })}
+
+                        {unverifiedAccounts.length === 0 && (
+                            <p className="text-xl font-bold">No unverified accounts</p>
+                        )}
+                    </div>
+                </div>
+
+                <div>
+                    <h1 className="text-3xl font-bold text-black mb-6">Verified Accounts</h1>
+                    <div className="flex flex-col gap-6">
+                        {verifiedAccounts.map((account) => {
+                            return (
+                                <StaffCard
+                                    key={account.getUid()}
+                                    id={account.getUid()}
+                                    name={account.getName()}
+                                    email={account.getEmail()}
+                                    role={account.getRole()}
+                                    verified={account.isVerified()}
+                                    onClick={() => {
+                                        setSelectedAccount(account);
+                                    }}
+                                />
+                            );
+                        })}
+                        {verifiedAccounts.length === 0 && (
+                            <p className="text-xl font-bold text-black">No verified accounts</p>
+                        )}
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
@@ -57,11 +112,12 @@ export default function Page() {
         });
     }, []);
     return (
-        <div className="bg-gray-100 text-white">
+        <div className="bg-gray-100">
             <LeftNavBar/>
 
-            {loading ? <Loading/> : <ActualPage data={data}/>}
-
+            <div className="ml-32">
+                {loading ? <Loading/> : <ActualPage data={data}/>}
+            </div>
         </div>
     )
 }
