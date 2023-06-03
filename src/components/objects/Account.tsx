@@ -19,7 +19,7 @@ export class Account {
         this.name = "";
         this.email = "";
         this.role = AccountRole.Staff;
-        this.shift = AccountShift.UNKNOWN;
+        this.shift = AccountShift.Unknown;
         this.createdAt = null;
         this.verifiedBy = null;
         this.verifiedAt = null;
@@ -99,6 +99,7 @@ export class Account {
         account.setEmail(data['email']);
         account.setVerified(data['verified']);
         account.setRole(data['role']);
+        account.setShift(data['shift']);
         account.setCreatedAt(data['createdAt']);
         account.setVerifiedBy(data['verifiedBy']);
         account.setVerifiedAt(data['verifiedAt']);

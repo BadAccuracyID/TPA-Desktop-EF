@@ -65,6 +65,7 @@ export const initUserData = async (userId: string, name: string, email: string) 
             name: name,
             email: email,
             role: 'Staff',
+            shift: 'Select Shift',
             verified: false,
             createdAt: new Date(),
             verifiedBy: null,

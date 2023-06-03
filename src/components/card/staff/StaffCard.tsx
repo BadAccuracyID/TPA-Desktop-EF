@@ -5,36 +5,40 @@ import {UserCircleIcon, WrenchIcon, XMarkIcon} from "@heroicons/react/20/solid";
 import React, {useState} from "react";
 import {AccountShift} from "@/components/objects/AccountShift";
 
-export const StaffCard = ({id, name, email, role, verified, onClick}: {
-    id: string;
-    name: string;
-    email: string;
-    role: AccountRole;
-    verified: boolean;
+export const StaffCard = ({account, onClick}: {
+    account: Account;
     onClick: () => void;
 }) => {
     return (
         <div className="relative bg-white text-black shadow-lg h-max flex flex-col rounded-md p-4">
             <div className="flex flex-row gap-1.5 mb-2 items-center">
                 <UserCircleIcon className="w-7"/>
-                <span className="text-xl font-bold overflow-clip">{name}</span>
+                <span className="text-xl font-bold overflow-clip">{account.getName()}</span>
 
                 <WrenchIcon
                     className="ml-auto w-7 h-auto bg-blue-600 hover:bg-blue-500 p-1 text-white rounded-md cursor-pointer"
                     onClick={onClick}/>
             </div>
 
-            <p className="">
-                <span className="font-semibold">UID:</span> {id}
+            <p>
+                <span className="font-semibold">UID:</span> {account.getUid()}
             </p>
-            <p className="">
-                <span className="font-semibold">Role:</span> {role.toString()}
+
+            {account.isVerified() ?
+                <div>
+                    <p>
+                        <span className="font-semibold">Role:</span> {account.getRole().toString()}
+                    </p>
+                    <p>
+                        <span className="font-semibold">Shift:</span> {account.getShift().toString()}
+                    </p>
+                </div> : <div></div>}
+
+            <p>
+                <span className="font-semibold">Email:</span> {account.getEmail()}
             </p>
-            <p className="">
-                <span className="font-semibold">Email:</span> {email}
-            </p>
-            <p className="">
-                <span className="font-semibold">Verified:</span> {verified ? "Yes" : "No"}
+            <p>
+                <span className="font-semibold">Verified:</span> {account.isVerified() ? "Yes" : "No"}
             </p>
 
         </div>
@@ -84,28 +88,28 @@ export const StaffSettingsModel = ({account, onClose}: {
                     </button>
                 </div>
                 <div className="mt-4">
-                    <p className="">
+                    <p>
                         <span className="font-semibold">UID:</span> {account.getUid()}
                     </p>
-                    <p className="">
+                    <p>
                         <span className="font-semibold">Role:</span> {account.getRole().toString()}
                     </p>
-                    <p className="">
+                    <p>
                         <span className="font-semibold">Email:</span> {account.getEmail()}
                     </p>
-                    <p className="">
+                    <p>
                         <span className="font-semibold">Created At:</span> {" "}
                         {createdAt ? formatDate(toDateFromSeconds(createdAt)) : "Unknown"}
                     </p>
-                    <p className="">
+                    <p>
                         <span className="font-semibold">Verified:</span> {account.isVerified() ? "Yes" : "No"}
                     </p>
                     {account.isVerified() ?
                         <div>
-                            <p className="">
+                            <p>
                                 <span className="font-semibold">Verified By:</span> {account.getVerifiedBy()}
                             </p>
-                            <p className="">
+                            <p>
                                 <span className="font-semibold">Verified At:</span> {" "}
                                 {verifiedAt ? formatDate(toDateFromSeconds(verifiedAt)) : "Never"}
                             </p>
@@ -157,7 +161,6 @@ export const StaffSettingsModel = ({account, onClose}: {
                             className="border border-gray-300 rounded-md p-2 w-full">
                             {
                                 Object.values(AccountRole)
-                                    .filter((value) => typeof value === 'string')
                                     .map((role) => {
                                         return (
                                             <option key={role.toString()} value={role.toString()}>

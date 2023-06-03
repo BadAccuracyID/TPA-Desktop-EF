@@ -46,11 +46,7 @@ const ActualPage = ({data}: { data: Account[] }) => {
                             return (
                                 <StaffCard
                                     key={account.getUid()}
-                                    id={account.getUid()}
-                                    name={account.getName()}
-                                    email={account.getEmail()}
-                                    role={account.getRole()}
-                                    verified={account.isVerified()}
+                                    account={account}
                                     onClick={() => {
                                         setSelectedAccount(account);
                                     }}
@@ -71,11 +67,7 @@ const ActualPage = ({data}: { data: Account[] }) => {
                             return (
                                 <StaffCard
                                     key={account.getUid()}
-                                    id={account.getUid()}
-                                    name={account.getName()}
-                                    email={account.getEmail()}
-                                    role={account.getRole()}
-                                    verified={account.isVerified()}
+                                    account={account}
                                     onClick={() => {
                                         setSelectedAccount(account);
                                     }}
