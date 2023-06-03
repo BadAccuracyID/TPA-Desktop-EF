@@ -11,10 +11,15 @@ const ActualPage = ({data}: { data: Account[] }) => {
     const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
     const [unverifiedAccounts, setUnverifiedAccounts] = useState<Account[]>([]);
     const [verifiedAccounts, setVerifiedAccounts] = useState<Account[]>([]);
+    const [doRefresh, setDoRefresh] = useState(false);
 
     const handleCloseModal = () => {
         setSelectedAccount(null);
     };
+
+    const handleDoRefresh = () => {
+        setDoRefresh(true);
+    }
 
     // load unverified accounts
     useEffect(() => {
@@ -22,20 +27,23 @@ const ActualPage = ({data}: { data: Account[] }) => {
             return !account.isVerified();
         });
         setUnverifiedAccounts(unverified);
-    }, [data]);
+        setDoRefresh(false);
+    }, [data, doRefresh]);
 
     // load verified accounts
     useEffect(() => {
         const verified = data.filter((account) => {
             return account.isVerified();
         });
+
         setVerifiedAccounts(verified);
-    }, [data]);
+        setDoRefresh(false);
+    }, [data, doRefresh]);
 
     return (
         <div className="gap-6 grid grid-cols-1 justify-items-center min-h-screen h-max w-max p-8">
             {selectedAccount && (
-                <StaffSettingsModel account={selectedAccount} onClose={handleCloseModal}/>
+                <StaffSettingsModel account={selectedAccount} onClose={handleCloseModal} doRefresh={handleDoRefresh}/>
             )}
 
             <div className="flex flex-col gap-6 items-start">

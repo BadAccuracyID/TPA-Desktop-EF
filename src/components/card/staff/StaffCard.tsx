@@ -46,9 +46,10 @@ export const StaffCard = ({account, onClick}: {
     )
 }
 
-export const StaffSettingsModel = ({account, onClose}: {
+export const StaffSettingsModel = ({account, onClose, doRefresh}: {
     account: Account;
     onClose: () => void;
+    doRefresh: () => void;
 }) => {
     const createdAt: any | null = account.getCreatedAt();
     const verifiedAt: any | null = account.getVerifiedAt();
@@ -76,6 +77,7 @@ export const StaffSettingsModel = ({account, onClose}: {
         if (role instanceof Promise) {
             role.then(() => {
                 onClose();
+                doRefresh();
             });
         }
     }
@@ -92,9 +94,11 @@ export const StaffSettingsModel = ({account, onClose}: {
                 return;
             }
 
-            account.verify(currentAccount.getName(), shiftFromString(shift)).then(() => {
-                onClose();
-            });
+            account.verify(currentAccount.getName(), shiftFromString(shift))
+                .then(() => {
+                    onClose();
+                    doRefresh();
+                });
         });
     };
 
