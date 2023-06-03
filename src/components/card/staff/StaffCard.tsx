@@ -3,7 +3,7 @@ import {formatDate, toDateFromSeconds} from "@/utils/AccountUtils";
 import {Account} from "@/components/objects/Account";
 import {UserCircleIcon, WrenchIcon, XMarkIcon} from "@heroicons/react/20/solid";
 import React, {useState} from "react";
-import {AccountShift, shiftFromString} from "@/components/objects/AccountShift";
+import {AccountShift, shiftFromString, shiftToFull} from "@/components/objects/AccountShift";
 import {getCurrentAccount} from "@/components/datastore/local/UserManager";
 
 export const StaffCard = ({account, onClick}: {
@@ -31,7 +31,7 @@ export const StaffCard = ({account, onClick}: {
                         <span className="font-semibold">Role:</span> {account.getRole().toString()}
                     </p>
                     <p>
-                        <span className="font-semibold">Shift:</span> {account.getShift().toString()}
+                        <span className="font-semibold">Shift:</span> {shiftToFull(account.getShift())}
                     </p>
                 </div> : <div></div>}
 
@@ -87,9 +87,9 @@ export const StaffSettingsModel = ({account, onClose, doRefresh}: {
             if (!currentAccount) {
                 return;
             }
-            // if (currentAccount.getRole() !== AccountRole.Administrator) {
-            //     return;
-            // }
+            if (currentAccount.getRole() !== AccountRole.Administrator) {
+                return;
+            }
             if (shift == "Unknown" || shift == "Select Shift") {
                 return;
             }
@@ -166,7 +166,7 @@ export const StaffSettingsModel = ({account, onClose, doRefresh}: {
                                         .map((shift) => {
                                             return (
                                                 <option key={shift.toString()} value={shift.toString()}>
-                                                    {shift.toString()}
+                                                    {shiftToFull(shift)}
                                                 </option>
                                             )
                                         })

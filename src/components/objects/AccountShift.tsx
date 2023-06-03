@@ -35,3 +35,16 @@ export function shiftToBiTime(shift: AccountShift): BiTime {
             return {start: 0, end: 0};
     }
 }
+
+export function shiftToFull(shift: AccountShift): string {
+    switch (shift) {
+        case AccountShift.Morning:
+            return "Morning (05.00 - 13.00)";
+        case AccountShift.Afternoon:
+            return "Afternoon (13.00 - 21.00)";
+        case AccountShift.Night:
+            return "Night (21.00 - 05.00)";
+        default:
+            return "Unknown";
+    }
+}
