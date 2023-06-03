@@ -11,6 +11,7 @@ import {
     User
 } from "@firebase/auth";
 import {collection, doc, getDocs, setDoc} from "@firebase/firestore";
+import {AccountShift} from "@/components/objects/AccountShift";
 
 // Authentication Methods
 export const signIn = async (email: string, password: string, remember: boolean) => {
@@ -109,6 +110,20 @@ export const getAllUsers = async () => {
         }
     } catch (error) {
         console.error('Error fetching users:', error);
+        throw error;
+    }
+}
+
+// Account methods
+export const verifyAccount = async (userId: string, shift: AccountShift, verifiedBy: string) => {
+    try {
+        await setDoc(doc(firestore, 'users', userId), {
+            shift: shift,
+            verified: true,
+            verifiedBy: verifiedBy,
+            verifiedAt: new Date(),
+        }, {merge: true});
+    } catch (error) {
         throw error;
     }
 }

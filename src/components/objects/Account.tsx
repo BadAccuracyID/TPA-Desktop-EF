@@ -1,6 +1,7 @@
 import {AccountRole} from "./AccountRole";
 import {DocumentData} from "@firebase/firestore";
 import {AccountShift} from "@/components/objects/AccountShift";
+import {verifyAccount} from "@/components/datastore/firebase/FirebaseManager";
 
 export class Account {
     private readonly uid: string;
@@ -93,7 +94,17 @@ export class Account {
         this.verifiedAt = verifiedAt;
     }
 
-    static fromDocumentData(data: DocumentData): Account {
+    // functions
+    public async verify(verifiedBy: string, shift: AccountShift) {
+        this.verified = true;
+        this.verifiedBy = verifiedBy;
+        this.verifiedAt = new Date();
+
+        return await verifyAccount(this.uid, shift, verifiedBy)
+    }
+
+    // static
+    public static fromDocumentData(data: DocumentData): Account {
         const account = new Account(data['uid']);
         account.setName(data['name']);
         account.setEmail(data['email']);

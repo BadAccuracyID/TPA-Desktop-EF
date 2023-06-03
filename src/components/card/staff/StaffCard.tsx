@@ -3,7 +3,8 @@ import {formatDate, toDateFromSeconds} from "@/utils/AccountUtils";
 import {Account} from "@/components/objects/Account";
 import {UserCircleIcon, WrenchIcon, XMarkIcon} from "@heroicons/react/20/solid";
 import React, {useState} from "react";
-import {AccountShift} from "@/components/objects/AccountShift";
+import {AccountShift, shiftFromString} from "@/components/objects/AccountShift";
+import {getCurrentAccount} from "@/components/datastore/local/UserManager";
 
 export const StaffCard = ({account, onClick}: {
     account: Account;
@@ -67,6 +68,21 @@ export const StaffSettingsModel = ({account, onClose}: {
     }
 
     const handleToggleVerification = () => {
+        getCurrentAccount().then((currentAccount) => {
+            if (!currentAccount) {
+                return;
+            }
+            // if (currentAccount.getRole() !== AccountRole.Administrator) {
+            //     return;
+            // }
+            if (shift == "Unknown" || shift == "Select Shift") {
+                return;
+            }
+
+            account.verify(currentAccount.getName(), shiftFromString(shift)).then(() => {
+                onClose();
+            });
+        });
     };
 
     const handleDeleteAccount = () => {
@@ -139,7 +155,8 @@ export const StaffSettingsModel = ({account, onClose}: {
                                         })
                                 }
                             </select>
-                            <button>
+                            <button
+                                onClick={handleToggleVerification}>
                                 <span className="text-white bg-blue-600 hover:bg-blue-500 p-2 rounded-md">
                                     Confirm
                                 </span>
