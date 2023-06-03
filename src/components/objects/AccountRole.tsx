@@ -1,7 +1,7 @@
 export enum AccountRole {
-    Staff,
-    Doctor,
-    Nurse,
-    Pharmacist,
-    Administrator
+    Staff = "Staff",
+    Doctor = "Doctor",
+    Nurse = "Nurse",
+    Pharmacist = "Pharmacist",
+    Administrator = "Administrator"
 }

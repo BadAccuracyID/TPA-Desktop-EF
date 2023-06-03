@@ -1,5 +1,6 @@
 import {AccountRole} from "./AccountRole";
 import {DocumentData} from "@firebase/firestore";
+import {AccountShift} from "@/components/objects/AccountShift";
 
 export class Account {
     private readonly uid: string;
@@ -7,6 +8,7 @@ export class Account {
     private name: string;
     private email: string;
     private role: AccountRole;
+    private shift: AccountShift;
     private createdAt: Date | null;
     private verifiedBy: string | null;
     private verifiedAt: Date | null;
@@ -17,6 +19,7 @@ export class Account {
         this.name = "";
         this.email = "";
         this.role = AccountRole.Staff;
+        this.shift = AccountShift.UNKNOWN;
         this.createdAt = null;
         this.verifiedBy = null;
         this.verifiedAt = null;
@@ -56,6 +59,14 @@ export class Account {
 
     public setRole(role: AccountRole): void {
         this.role = role;
+    }
+
+    public getShift(): AccountShift {
+        return this.shift;
+    }
+
+    public setShift(shift: AccountShift): void {
+        this.shift = shift;
     }
 
     public getCreatedAt(): Date | null {

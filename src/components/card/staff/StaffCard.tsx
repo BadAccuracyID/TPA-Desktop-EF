@@ -1,8 +1,9 @@
 import {AccountRole} from "@/components/objects/AccountRole";
 import {formatDate, toDateFromSeconds} from "@/utils/AccountUtils";
 import {Account} from "@/components/objects/Account";
-import {CheckCircleIcon, UserCircleIcon, WrenchIcon, XMarkIcon} from "@heroicons/react/20/solid";
+import {UserCircleIcon, WrenchIcon, XMarkIcon} from "@heroicons/react/20/solid";
 import React, {useState} from "react";
+import {AccountShift} from "@/components/objects/AccountShift";
 
 export const StaffCard = ({id, name, email, role, verified, onClick}: {
     id: string;
@@ -47,6 +48,7 @@ export const StaffSettingsModel = ({account, onClose}: {
     const createdAt: any | null = account.getCreatedAt();
     const verifiedAt: any | null = account.getVerifiedAt();
     const [selectedRole, setSelectedRole] = useState(account.getRole().toString());
+    const [shift, setShift] = useState(account.getShift().toString());
 
     const handleClose = () => {
         onClose();
@@ -55,6 +57,10 @@ export const StaffSettingsModel = ({account, onClose}: {
     const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedRole(event.target.value);
     };
+
+    const handleShiftChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setShift(event.target.value);
+    }
 
     const handleToggleVerification = () => {
     };
@@ -88,20 +94,55 @@ export const StaffSettingsModel = ({account, onClose}: {
                         <span className="font-semibold">Email:</span> {account.getEmail()}
                     </p>
                     <p className="">
-                        <span className="font-semibold">Created At:</span>{" "}
+                        <span className="font-semibold">Created At:</span> {" "}
                         {createdAt ? formatDate(toDateFromSeconds(createdAt)) : "Unknown"}
                     </p>
                     <p className="">
                         <span className="font-semibold">Verified:</span> {account.isVerified() ? "Yes" : "No"}
                     </p>
-                    <p className="">
-                        <span className="font-semibold">Verified By:</span> {account.getVerifiedBy()}
-                    </p>
-                    <p className="">
-                        <span className="font-semibold">Verified At:</span>{" "}
-                        {verifiedAt ? formatDate(toDateFromSeconds(verifiedAt)) : "Never"}
-                    </p>
+                    {account.isVerified() ?
+                        <div>
+                            <p className="">
+                                <span className="font-semibold">Verified By:</span> {account.getVerifiedBy()}
+                            </p>
+                            <p className="">
+                                <span className="font-semibold">Verified At:</span> {" "}
+                                {verifiedAt ? formatDate(toDateFromSeconds(verifiedAt)) : "Never"}
+                            </p>
+                        </div> : <div></div>}
                 </div>
+
+                {/* Account Verification */}
+                {account.isVerified() ? <div></div> :
+                    <div className="pt-2 flex flex-col gap-2">
+                        <label htmlFor="roleSelect" className="font-semibold">
+                            Verify Staff:
+                        </label>
+                        <div className="flex flex-row gap-2">
+                            <select
+                                id="shiftSelect"
+                                value={shift}
+                                onChange={handleShiftChange}
+                                className="border border-gray-300 rounded-md p-2 w-full">
+                                {
+                                    Object.values(AccountShift)
+                                        .map((shift) => {
+                                            return (
+                                                <option key={shift.toString()} value={shift.toString()}>
+                                                    {shift.toString()}
+                                                </option>
+                                            )
+                                        })
+                                }
+                            </select>
+                            <button>
+                                <span className="text-white bg-blue-600 hover:bg-blue-500 p-2 rounded-md">
+                                    Confirm
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                }
 
                 {/* Role selection */}
                 <div className="pt-4 flex flex-col gap-2">
@@ -126,24 +167,20 @@ export const StaffSettingsModel = ({account, onClose}: {
                                     })
                             }
                         </select>
-                        <button className="">
-                            <CheckCircleIcon
-                                className="w-9 h-auto bg-green-500 hover:bg-green-400 p-1 text-white rounded-md cursor-pointer"/>
+                        <button>
+                                <span className="text-white bg-green-500 hover:bg-green-400 p-2 rounded-md">
+                                    Confirm
+                                </span>
                         </button>
                     </div>
                 </div>
 
-                {/* Buttons */}
-                <div className="pt-4 flex flex-row justify-center gap-4">
-                    <button>
-                        <span
-                            className="text-white bg-blue-600 hover:bg-blue-500 p-2 rounded-md">Toggle Verification</span>
-                    </button>
-                    <button>
-                        <span
-                            className="text-white bg-red-600 hover:bg-red-500 p-2 rounded-md">Delete Account</span>
-                    </button>
-                </div>
+
+                <button className="pt-4 w-full flex flex-col">
+                    <p className="text-white bg-red-600 hover:bg-red-500 p-2 w-full rounded-md">
+                        Delete Account
+                    </p>
+                </button>
             </div>
         </div>
     )
