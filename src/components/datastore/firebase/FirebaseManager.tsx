@@ -127,3 +127,13 @@ export const verifyAccount = async (userId: string, shift: AccountShift, verifie
         throw error;
     }
 }
+
+export const setAccountRole = async (userId: string, role: string) => {
+    try {
+        await setDoc(doc(firestore, 'users', userId), {
+            role: role,
+        }, {merge: true});
+    } catch (error) {
+        throw error;
+    }
+}

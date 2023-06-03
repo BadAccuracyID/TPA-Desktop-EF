@@ -1,4 +1,4 @@
-import {AccountRole} from "@/components/objects/AccountRole";
+import {AccountRole, roleFromString} from "@/components/objects/AccountRole";
 import {formatDate, toDateFromSeconds} from "@/utils/AccountUtils";
 import {Account} from "@/components/objects/Account";
 import {UserCircleIcon, WrenchIcon, XMarkIcon} from "@heroicons/react/20/solid";
@@ -67,7 +67,20 @@ export const StaffSettingsModel = ({account, onClose}: {
         setShift(event.target.value);
     }
 
-    const handleToggleVerification = () => {
+    const handleRoleSet = () => {
+        if (account.getRole().toString() === selectedRole) {
+            return;
+        }
+
+        const role = account.setRole(roleFromString(selectedRole), true);
+        if (role instanceof Promise) {
+            role.then(() => {
+                onClose();
+            });
+        }
+    }
+
+    const handleVerifyAccount = () => {
         getCurrentAccount().then((currentAccount) => {
             if (!currentAccount) {
                 return;
@@ -156,7 +169,7 @@ export const StaffSettingsModel = ({account, onClose}: {
                                 }
                             </select>
                             <button
-                                onClick={handleToggleVerification}>
+                                onClick={handleVerifyAccount}>
                                 <span className="text-white bg-blue-600 hover:bg-blue-500 p-2 rounded-md">
                                     Confirm
                                 </span>
@@ -187,7 +200,8 @@ export const StaffSettingsModel = ({account, onClose}: {
                                     })
                             }
                         </select>
-                        <button>
+                        <button
+                            onClick={handleRoleSet}>
                                 <span className="text-white bg-green-500 hover:bg-green-400 p-2 rounded-md">
                                     Confirm
                                 </span>

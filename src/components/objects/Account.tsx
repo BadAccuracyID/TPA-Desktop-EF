@@ -1,7 +1,7 @@
 import {AccountRole} from "./AccountRole";
 import {DocumentData} from "@firebase/firestore";
 import {AccountShift} from "@/components/objects/AccountShift";
-import {verifyAccount} from "@/components/datastore/firebase/FirebaseManager";
+import {setAccountRole, verifyAccount} from "@/components/datastore/firebase/FirebaseManager";
 
 export class Account {
     private readonly uid: string;
@@ -58,8 +58,12 @@ export class Account {
         return this.role;
     }
 
-    public setRole(role: AccountRole): void {
+    public setRole(role: AccountRole, save: boolean = false): void | Promise<void> {
         this.role = role;
+
+        if (save) {
+            return setAccountRole(this.uid, role);
+        }
     }
 
     public getShift(): AccountShift {
