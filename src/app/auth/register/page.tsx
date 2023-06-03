@@ -50,9 +50,7 @@ export default function Page() {
             register(email, password)
                 .then(credential => {
                     initAccountData(credential.user.uid, name, email);
-                    signIn(email, password, false).then(() => {
-                        router.push('/dashboard');
-                    })
+                    setMessage('Registration successful');
                 })
                 .catch(error => {
                     setRedOutput(true);

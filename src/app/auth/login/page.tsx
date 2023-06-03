@@ -3,8 +3,9 @@
 import {LockClosedIcon, XMarkIcon} from "@heroicons/react/20/solid";
 import Link from "next/link";
 import React, {useState} from "react";
-import {signIn} from "@/components/datastore/firebase/FirebaseManager";
+import {signIn, signOutUser} from "@/components/datastore/firebase/FirebaseManager";
 import {useRouter} from "next/navigation";
+import {getAccount} from "@/components/datastore/local/UserManager";
 
 export default function Page() {
     const router = useRouter();
@@ -43,9 +44,17 @@ export default function Page() {
             setMessage('Signing in...');
 
             signIn(email, password, rememberMe)
-                .then(() => {
-                    // redirect
-                    router.push('/dashboard');
+                .then((user) => {
+                    getAccount(user.user.uid).then((account) => {
+                        if (!account.isVerified()) {
+                            signOutUser();
+                            setRedOutput(true);
+                            setMessage('Account not verified. Contact an administrator.');
+                            return;
+                        }
+
+                        router.push('/dashboard');
+                    });
                 })
                 .catch(error => {
                     setRedOutput(true);
