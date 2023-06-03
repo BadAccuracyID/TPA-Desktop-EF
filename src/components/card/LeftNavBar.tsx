@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import React from "react";
+import React, {useEffect} from "react";
 import {AccountRole} from "@/components/objects/AccountRole";
 import {
     BeakerIcon,
@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import {getCurrentAccount} from "@/components/datastore/local/UserManager";
 import {useRouter} from "next/navigation";
+import {Account} from "@/components/objects/Account";
 
 interface MenuItem {
     name: string;
@@ -25,78 +26,91 @@ interface MenuItem {
 const menuIconAttr = "h-8 w-auto text-white";
 const menuItems: MenuItem[] = [
     {
-        name: 'Home',
+        name: "Home",
         icon: <HomeIcon className={menuIconAttr}/>,
-        requiredRoles: [AccountRole.Administrator],
-        redirectLink: '/dashboard'
+        requiredRoles: [AccountRole.Administrator, AccountRole.Staff],
+        redirectLink: "/dashboard"
     },
     {
-        name: 'Appointment',
+        name: "Appointment",
         icon: <CalendarIcon className={menuIconAttr}/>,
         requiredRoles: [AccountRole.Administrator],
-        redirectLink: '/appointment'
+        redirectLink: "/appointment"
     },
     {
-        name: 'Prescription',
+        name: "Prescription",
         icon: <BeakerIcon className={menuIconAttr}/>,
         requiredRoles: [AccountRole.Administrator],
-        redirectLink: '/prescription'
+        redirectLink: "/prescription"
     },
     {
-        name: 'Patient',
+        name: "Patient",
         icon: <UserIcon className={menuIconAttr}/>,
         requiredRoles: [AccountRole.Administrator],
-        redirectLink: '/patient'
+        redirectLink: "/patient"
     },
     {
-        name: 'Staff',
+        name: "Staff",
         icon: <UsersIcon className={menuIconAttr}/>,
         requiredRoles: [AccountRole.Administrator],
-        redirectLink: '/dashboard/staff'
+        redirectLink: "/dashboard/staff"
     },
     {
-        name: 'Transportation',
+        name: "Transportation",
         icon: <MapIcon className={menuIconAttr}/>,
         requiredRoles: [AccountRole.Administrator],
-        redirectLink: '/transportation'
+        redirectLink: "/transportation"
     },
     {
-        name: 'Certificate',
+        name: "Certificate",
         icon: <NewspaperIcon className={menuIconAttr}/>,
         requiredRoles: [AccountRole.Administrator],
-        redirectLink: '/certificate'
+        redirectLink: "/certificate"
     },
-]
+];
 
 export default function LeftNavBar() {
-    const router = useRouter()
-    const [username, setUsername] = React.useState('Fetching...')
+    const router = useRouter();
+    const [currentAccount, setCurrentAccount] = React.useState<Account | null>(null);
+    const [username, setUsername] = React.useState("Fetching...");
 
     // fetch on load
-    getCurrentAccount().then((account) => {
-        if (account) {
-            setUsername(account.getName())
-        } else {
-            router.push('/auth/login')
+    useEffect(() => {
+        getCurrentAccount().then((account) => {
+            if (account) {
+                setCurrentAccount(account);
+                setUsername(account.getName());
+            } else {
+                router.push("/auth/login");
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        if (currentAccount && !menuItems.some((menuItem) =>
+            menuItem.requiredRoles.includes(currentAccount.getRole()))) {
+            router.push('/dashboard');
         }
-    });
+    }, [currentAccount]);
 
     return (
         <nav
             className="navbar fixed left-0 top-0 h-full bg-blue-800 py-4 px-2 flex flex-col justify-start items-center z-50">
             <ul className="w-full max-h-full overflow-y-auto flex-grow">
-                {menuItems.map((menuItem, index) => (
-                    <li key={index}>
-                        <Link
-                            className="flex flex-col items-center text-white py-2.5 px-1 hover:bg-blue-500 cursor-pointer rounded-xl"
-                            href={menuItem.redirectLink}>
+                {menuItems
+                    .filter((menuItem) => currentAccount ? menuItem.requiredRoles.includes(currentAccount.getRole()) : false)
+                    .map((menuItem, index) => (
+                        <li key={index}>
+                            <Link
+                                className="flex flex-col items-center text-white py-2.5 px-1 hover:bg-blue-500 cursor-pointer rounded-xl"
+                                href={menuItem.redirectLink}>
 
-                            {menuItem.icon}
+                                {menuItem.icon}
 
-                            <span className="text-sm py-1">{menuItem.name}</span>
-                        </Link>
-                    </li>
-                ))}
+                                <span className="text-sm py-1">{menuItem.name}</span>
+                            </Link>
+                        </li>
+                    ))}
             </ul>
 
             <div className="flex flex-col items-center justify-end bg-blue-800 py-4 px-2">
@@ -113,5 +127,5 @@ export default function LeftNavBar() {
                 </Link>
             </div>
         </nav>
-    )
+    );
 }

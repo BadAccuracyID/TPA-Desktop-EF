@@ -11,34 +11,29 @@ const ActualPage = ({data}: { data: Account[] }) => {
     const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
     const [unverifiedAccounts, setUnverifiedAccounts] = useState<Account[]>([]);
     const [verifiedAccounts, setVerifiedAccounts] = useState<Account[]>([]);
-    const [doRefresh, setDoRefresh] = useState(false);
+    const [refresh, setRefresh] = useState(false);
 
     const handleCloseModal = () => {
         setSelectedAccount(null);
     };
 
     const handleDoRefresh = () => {
-        setDoRefresh(true);
+        setRefresh(true);
     }
 
-    // load unverified accounts
+    // load accounts
     useEffect(() => {
         const unverified = data.filter((account) => {
             return !account.isVerified();
         });
-        setUnverifiedAccounts(unverified);
-        setDoRefresh(false);
-    }, [data, doRefresh]);
-
-    // load verified accounts
-    useEffect(() => {
         const verified = data.filter((account) => {
             return account.isVerified();
         });
 
+        setUnverifiedAccounts(unverified);
         setVerifiedAccounts(verified);
-        setDoRefresh(false);
-    }, [data, doRefresh]);
+        setRefresh(!refresh);
+    }, [data]);
 
     return (
         <div className="gap-6 grid grid-cols-1 justify-items-center min-h-screen h-max w-max p-8">
@@ -111,6 +106,7 @@ export default function Page() {
             setLoading(false);
         });
     }, []);
+
     return (
         <div className="bg-gray-100">
             <LeftNavBar/>
