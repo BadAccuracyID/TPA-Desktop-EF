@@ -10,7 +10,7 @@ import {
     signOut,
     User
 } from "@firebase/auth";
-import {collection, doc, getDocs, setDoc} from "@firebase/firestore";
+import {collection, deleteDoc, doc, getDocs, setDoc} from "@firebase/firestore";
 import {AccountShift} from "@/components/objects/AccountShift";
 
 // Authentication Methods
@@ -59,7 +59,7 @@ export const firebaseUser = (): Promise<User | null> => {
 };
 
 // Firestore Methods
-export const initUserData = async (userId: string, name: string, email: string) => {
+export const initAccountData = async (userId: string, name: string, email: string) => {
     try {
         await setDoc(doc(firestore, 'users', userId), {
             uid: userId,
@@ -77,7 +77,7 @@ export const initUserData = async (userId: string, name: string, email: string) 
     }
 }
 
-export const getUserData = async (userId: string) => {
+export const getAccountData = async (userId: string) => {
     try {
         const collectionRef = collection(firestore, 'users');
         const docRef = await getDocs(collectionRef);
@@ -98,7 +98,7 @@ export const getUserData = async (userId: string) => {
     }
 }
 
-export const getAllUsers = async () => {
+export const getAllAccountData = async () => {
     try {
         const collectionRef = collection(firestore, 'users');
         const docRef = await getDocs(collectionRef);
@@ -109,7 +109,16 @@ export const getAllUsers = async () => {
             throw new Error('No users found');
         }
     } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error fetching users: ', error);
+        throw error;
+    }
+}
+
+export const deleteAccountData = async (userId: string) => {
+    try {
+        await deleteDoc(doc(firestore, 'users', userId));
+    } catch (error) {
+        console.error('Error deleting user: ', error)
         throw error;
     }
 }

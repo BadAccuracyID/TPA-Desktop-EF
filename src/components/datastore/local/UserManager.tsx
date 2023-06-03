@@ -1,4 +1,4 @@
-import {firebaseUser, getAllUsers, getUserData} from "@/components/datastore/firebase/FirebaseManager";
+import {firebaseUser, getAllAccountData, getAccountData} from "@/components/datastore/firebase/FirebaseManager";
 import {Account} from "@/components/objects/Account";
 
 export const getCurrentAccount = () => {
@@ -7,20 +7,20 @@ export const getCurrentAccount = () => {
             return null;
         }
 
-        return getUserData(user.uid).then((data) => {
+        return getAccountData(user.uid).then((data) => {
             return Account.fromDocumentData(data);
         })
     })
 }
 
 export const getAccount = (uid: string) => {
-    return getUserData(uid).then((data) => {
+    return getAccountData(uid).then((data) => {
         return Account.fromDocumentData(data);
     })
 }
 
 export const getAllAccounts = () => {
-    return getAllUsers().then((users) => {
+    return getAllAccountData().then((users) => {
         return users.map((user) => {
             return Account.fromDocumentData(user);
         })

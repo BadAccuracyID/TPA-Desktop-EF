@@ -4,7 +4,9 @@ import {Account} from "@/components/objects/Account";
 import {UserCircleIcon, WrenchIcon, XMarkIcon} from "@heroicons/react/20/solid";
 import React, {useState} from "react";
 import {AccountShift, shiftFromString, shiftToFull} from "@/components/objects/AccountShift";
-import {getCurrentAccount} from "@/components/datastore/local/UserManager";
+import {getAccount, getCurrentAccount} from "@/components/datastore/local/UserManager";
+import {deleteAccountData} from "@/components/datastore/firebase/FirebaseManager";
+import {deleteAccount} from "@/components/datastore/firebase/admin/FirebaseAdminManager";
 
 export const StaffCard = ({account, onClick}: {
     account: Account;
@@ -103,6 +105,19 @@ export const StaffSettingsModel = ({account, onClose, doRefresh}: {
     };
 
     const handleDeleteAccount = () => {
+        // get the user
+        getAccount(account.getUid()).then((account) => {
+            if (!account) {
+                return;
+            }
+
+            deleteAccountData(account.getUid()).then(() => {
+                deleteAccount(account.getUid()).then(() => {
+                    onClose();
+                    doRefresh();
+                });
+            });
+        })
     };
 
     return (
@@ -214,7 +229,8 @@ export const StaffSettingsModel = ({account, onClose, doRefresh}: {
                 </div>
 
 
-                <button className="pt-4 w-full flex flex-col">
+                <button className="pt-4 w-full flex flex-col"
+                        onClick={handleDeleteAccount}>
                     <p className="text-white bg-red-600 hover:bg-red-500 p-2 w-full rounded-md">
                         Delete Account
                     </p>
