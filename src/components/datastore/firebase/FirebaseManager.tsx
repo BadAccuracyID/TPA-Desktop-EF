@@ -116,7 +116,7 @@ export const getAllAccountData = async () => {
 
 export const deleteAccountData = async (userId: string) => {
     try {
-        await deleteDoc(doc(firestore, 'users', userId));
+        return await deleteDoc(doc(firestore, 'users', userId));
     } catch (error) {
         console.error('Error deleting user: ', error)
         throw error;

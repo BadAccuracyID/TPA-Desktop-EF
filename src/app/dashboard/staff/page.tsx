@@ -7,7 +7,10 @@ import {Account} from "@/components/objects/Account";
 import Loading from "@/components/card/Loading";
 import {StaffCard, StaffSettingsModel} from "@/components/card/staff/StaffCard";
 
-const ActualPage = ({data}: { data: Account[] }) => {
+const ActualPage = ({data, doRefetch}: {
+    data: Account[];
+    doRefetch: () => void;
+}) => {
     const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
     const [unverifiedAccounts, setUnverifiedAccounts] = useState<Account[]>([]);
     const [verifiedAccounts, setVerifiedAccounts] = useState<Account[]>([]);
@@ -19,6 +22,10 @@ const ActualPage = ({data}: { data: Account[] }) => {
 
     const handleDoRefresh = () => {
         setRefresh(!refresh);
+    }
+
+    const handleDoRefetch = () => {
+        doRefetch();
     }
 
     // load accounts
@@ -37,7 +44,12 @@ const ActualPage = ({data}: { data: Account[] }) => {
     return (
         <div className="gap-6 grid grid-cols-1 justify-items-center min-h-screen h-max w-max p-8">
             {selectedAccount && (
-                <StaffSettingsModel account={selectedAccount} onClose={handleCloseModal} doRefresh={handleDoRefresh}/>
+                <StaffSettingsModel
+                    account={selectedAccount}
+                    onClose={handleCloseModal}
+                    doRefresh={handleDoRefresh}
+                    doRefetch={handleDoRefetch}
+                />
             )}
 
             <div className="flex flex-col gap-6 items-start">
@@ -89,29 +101,40 @@ const ActualPage = ({data}: { data: Account[] }) => {
 export default function Page() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState<Account[]>([]);
+    const [refetch, setRefetch] = useState(false);
+
+    async function fetchData() {
+        try {
+            console.log('Fetching...')
+            const result = await getAllAccounts();
+            setData(result);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleDoRefetch = () => {
+        setRefetch(!refetch)
+    }
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const result = await getAllAccounts();
-                console.log(result)
-                setData(result);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
         fetchData().then(() => {
             setLoading(false);
         });
     }, []);
+
+    useEffect(() => {
+        fetchData().then(() => {
+            setLoading(false);
+        });
+    }, [refetch]);
 
     return (
         <div className="bg-gray-100">
             <LeftNavBar/>
 
             <div className="ml-32">
-                {loading ? <Loading/> : <ActualPage data={data}/>}
+                {loading ? <Loading/> : <ActualPage data={data} doRefetch={handleDoRefetch}/>}
             </div>
         </div>
     )

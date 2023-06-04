@@ -48,10 +48,11 @@ export const StaffCard = ({account, onClick}: {
     )
 }
 
-export const StaffSettingsModel = ({account, onClose, doRefresh}: {
+export const StaffSettingsModel = ({account, onClose, doRefresh, doRefetch}: {
     account: Account;
     onClose: () => void;
     doRefresh: () => void;
+    doRefetch: () => void;
 }) => {
     const createdAt: any | null = account.getCreatedAt();
     const verifiedAt: any | null = account.getVerifiedAt();
@@ -114,6 +115,7 @@ export const StaffSettingsModel = ({account, onClose, doRefresh}: {
             deleteAccount(account.getUid()).then(() => {
                 deleteAccountData(account.getUid()).then(() => {
                     onClose();
+                    doRefetch();
                     doRefresh();
                 });
             });
