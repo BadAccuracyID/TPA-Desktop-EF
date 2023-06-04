@@ -1,9 +1,8 @@
-import {applicationDefault, initializeApp} from 'firebase-admin/app';
-import {getAuth} from 'firebase-admin/auth';
+import admin, {credential} from "firebase-admin"
+import applicationDefault = credential.applicationDefault;
 
-const adminApp = initializeApp({
-    credential: applicationDefault(),
-    databaseURL: 'https://TPA-Desktop-EF-1.firebaseio.com'
-}, 'adminApp');
-
-export const adminAuth = getAuth(adminApp);
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: applicationDefault(),
+    })
+}

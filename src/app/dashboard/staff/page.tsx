@@ -18,7 +18,7 @@ const ActualPage = ({data}: { data: Account[] }) => {
     };
 
     const handleDoRefresh = () => {
-        setRefresh(true);
+        setRefresh(!refresh);
     }
 
     // load accounts
@@ -32,8 +32,7 @@ const ActualPage = ({data}: { data: Account[] }) => {
 
         setUnverifiedAccounts(unverified);
         setVerifiedAccounts(verified);
-        setRefresh(!refresh);
-    }, [data]);
+    }, [data, refresh]);
 
     return (
         <div className="gap-6 grid grid-cols-1 justify-items-center min-h-screen h-max w-max p-8">
