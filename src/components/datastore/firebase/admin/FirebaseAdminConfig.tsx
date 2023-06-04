@@ -1,8 +1,17 @@
-import admin, {credential} from "firebase-admin"
-import applicationDefault = credential.applicationDefault;
+import admin from "firebase-admin"
 
-if (!admin.apps.length) {
-    admin.initializeApp({
-        credential: applicationDefault(),
-    })
+const serviceAccount = require("../../../../../key-1.json");
+
+let adminApp: admin.app.App | null = null;
+
+export function getAdminApp() {
+    if (admin.apps.length) {
+        adminApp = admin.apps[0];
+    } else {
+        adminApp = admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount),
+        }, "adminApp");
+    }
+
+    return adminApp;
 }

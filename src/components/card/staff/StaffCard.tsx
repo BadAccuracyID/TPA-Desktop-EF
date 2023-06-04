@@ -111,8 +111,8 @@ export const StaffSettingsModel = ({account, onClose, doRefresh}: {
                 return;
             }
 
-            deleteAccountData(account.getUid()).then(() => {
-                deleteAccount(account.getEmail()).then(() => {
+            deleteAccount(account.getUid()).then(() => {
+                deleteAccountData(account.getUid()).then(() => {
                     onClose();
                     doRefresh();
                 });
